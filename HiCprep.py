@@ -116,18 +116,18 @@ class Hic():
                         out.write('{0} {1} {2}'.format(i, j, mij));
                         #print '{0} {1} {2}'.format(i, j, mij);
 
-    #def __str__(self):
-    #    return len(self.RAWexpected);
 
-def main(argv):
-    datadir='../../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30'
-    hic = Hic(datadir, 'chr21', '1kb');
-
+def hic_prep(datadir, chr, res):
     hic.extract(max = 1000000, norm = None, exp = 'RAW');
     hic.extract(max = 1000000, norm = 'KR', exp = 'KR');
     hic.extract(max = 1000000, norm = 'VC', exp = 'VC');
     hic.extract(max = 1000000, norm = 'SQRTVC', exp = 'SQRTVC');
-    
+
+def main(argv):    
+    datadir='../../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
+    chr = 'chr21';
+    res = '1kb';
+    hic_prep(datadir, chr, res);
     return;
 
 if __name__ == "__main__":
