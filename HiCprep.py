@@ -118,6 +118,7 @@ class Hic():
 
 
 def hic_prep(datadir, chr, res):
+    hic = Hic(datadir, chr, res);
     hic.extract(max = 1000000, norm = None, exp = 'RAW');
     hic.extract(max = 1000000, norm = 'KR', exp = 'KR');
     hic.extract(max = 1000000, norm = 'VC', exp = 'VC');
