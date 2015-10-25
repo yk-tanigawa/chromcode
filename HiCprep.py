@@ -113,7 +113,7 @@ class Hic():
                             mij /= (norm_v[i / self.resnum] * norm_v[j / self.resnum]);
                         if (exp != None):
                             mij /= exp_v[abs(i - j) / self.resnum];
-                        out.write('{0} {1} {2}'.format(i, j, mij));
+                        out.write('{0} {1} {2}\n'.format(i, j, mij));
                         #print '{0} {1} {2}'.format(i, j, mij);
 
 
