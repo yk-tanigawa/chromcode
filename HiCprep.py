@@ -123,8 +123,18 @@ def hic_prep(datadir, chr, res):
     hic.extract(max = 1000000, norm = 'VC', exp = 'VC');
     hic.extract(max = 1000000, norm = 'SQRTVC', exp = 'SQRTVC');
 
+
+def dirname(datadir = '/data/yt', res = '1kb', chr = 21):    
+    return ''.join([datadir,
+                    '/GM12878_combined/',
+                    res,
+                    '_resolution_intrachromosomal/chr',
+                    chr,
+                    '/MAPQGE30']);
+    
 def main(argv):    
-    datadir='../../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
+    #datadir='../../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
+    datadir=dirname(chr = 21);
     chr = 'chr21';
     res = '1kb';
     hic_prep(datadir, chr, res);
