@@ -18,8 +18,9 @@ def pos(hicfile = 'hic.pos.npz',
         print 'file exists, but parameter not found';
         raise;
     else: 
-        pos = np.array(list(hic_set.intersection(gen_set)));
-        np.savez(outfile, pos = pos);
+        pos = list(hic_set.intersection(gen_set));
+        pos.sort();
+        np.savez(outfile, pos = np.array(pos));
         if(output):
             print 'Hi-C data contains {0} positions'.format(len(hic_set));
             print 'Genome data contains {0} positions'.format(len(gen_set));
