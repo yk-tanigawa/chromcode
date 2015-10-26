@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 import sys, os;
+import numpy as np;
 
 class Hic():
     def __init__(self, dirname, chr, res):
@@ -70,7 +71,7 @@ class Hic():
                 self.SQRTVCexpected.append(float(l[:-1]));
 
     def extract(self, min = None, max = None, 
-                norm = None, exp = None):
+                norm = None, exp = None, posfile = 'hic.pos.npz'):
         fname_head = self.dirname + '/' + self.chrstr + '_' + self.resstr;
         if(norm == 'KR'):
             norm_v = self.KRnorm;
@@ -99,6 +100,7 @@ class Hic():
         else:
             exp_str = 'noOE'
 
+        ijset = set([]);
         with open(fname_head + '.RAWobserved', 
                   'r') as f:
             wfname = '.'.join([fname_head, norm_str, exp_str, 'dat']);
@@ -114,8 +116,12 @@ class Hic():
                         if (exp != None):
                             mij /= exp_v[abs(i - j) / self.resnum];
                         out.write('{0} {1} {2}\n'.format(i, j, mij));
+                        ijset.add(i);
+                        ijset.add(j);
                         #print '{0} {1} {2}'.format(i, j, mij);
-
+        positions = np.array(list(ijset));
+        np.savez(posfile, hic = positions);
+        return;
 
 def hic_prep(datadir, chr, res):
     hic = Hic(datadir, chr, res);
@@ -134,8 +140,8 @@ def dirname(datadir = '/data/yt', res = '1kb', chr = 'chr21'):
                     '/MAPQGE30']);
     
 def main(argv):    
-    #datadir='../../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
-    datadir=dirname(chr = 'chr21');
+    datadir='../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
+    #datadir=dirname(chr = 'chr21');
     chr = 'chr21';
     res = '1kb';
     hic_prep(datadir, chr, res);
