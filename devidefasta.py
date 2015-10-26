@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import os, sys;
+import numpy as np;
 
 def get_ref(fp):
     # sequence header
@@ -28,11 +29,14 @@ def mkfasta_sub(head, seq, fname):
     fp.close();
     return;
 
-def mkfasta(head, seq, interval, fname_head, fnames):
+def mkfasta(head, seq, interval, fname_head, fnames, k = 1,
+            posfile = 'genome.pos.npz'):
+    ijset = set([]);
     for i in xrange(len(seq) / interval + 1):
-        subseq = seq[i * interval : (i + 1) * interval];    
+        subseq = seq[i * interval : (i + 1) * interval + k - 1];    
         if('N' not in subseq and len(subseq) == interval):
             posstr = '{0}'.format(i * interval);
+            ijset.add(i * interval);
             subseq_head =  head + ' ' + posstr + '\n';
             subseq_fname = fname_head + '.' + posstr + '.fasta';
             #print subseq_head;    
@@ -40,7 +44,9 @@ def mkfasta(head, seq, interval, fname_head, fnames):
             #print subseq_fname;
             mkfasta_sub(subseq_head, subseq, subseq_fname);
             fnames.append(subseq_fname);
+    np.savez(posfile, genome = np.array(list(ijset)));
     return;
+
 
 def get_fname_head(fname):
     if(fname.endswith('.fasta')):
