@@ -11,10 +11,10 @@ def allkmers(k):
 def kmercount(k, pos, chr = 21,
               fname_head = '../../data/GRCh38.p2.ch21/GRCh38.p2'):
     try:
-        fname = '{head}.ch{chr}.{pos}.{k}.jf'.format(head = fname_head,
-                                                     chr = chr,
-                                                     pos = pos, 
-                                                     k = k);
+        fname = '{head}.ch{chr}.{pos}.fasta.{k}.jf'.format(head = fname_head,
+                                                           chr = chr,
+                                                           pos = pos, 
+                                                           k = k);
         qf = jellyfish.QueryMerFile(fname);
     except RuntimeError:
         raise;
@@ -27,22 +27,28 @@ def kmercount(k, pos, chr = 21,
         for l in allkmers(k):
             c[i][0] += 2 * qf[jellyfish.MerDNA(''.join(l))];
             i += 1;
-        # print c;
         print c.T
-        print len(c);
-        # print c.dot(c.T);
+        # print len(c);
         return c;
 
 def compute_q(k, pos_set, hic_file):
     with open(hic_file, 'r') as f:
-        q = np.zeros(((1 << (2 * k)), (1 << (2 * k))), dtype = np.int64);
+        q = np.zeros(((1 << (2 * k)), (1 << (2 * k))), dtype = np.float64);
+        scale = 0.5 / ( 996 * 996 );
         for l in f:
             (si, sj, smij) = l[:-1].split();
             [i, j, mij] = [int(si), int(sj), float(smij)];
             if((i in pos_set) and (j in pos_set)):
                 ci = kmercount(k, i);
                 cj = kmercount(k, j);
-                q + ci.dot(cj.T);
+                print 'min(ci.dot(cj.T)) = {0}'.format(ci.dot(cj.T));
+                print 'min(mij * scale * ci.dot(cj.T)) = {0}'.format(mij * scale * ci.dot(cj.T));
+                print 'i = {i}\tj = {j}\tmij = {mij}'.format(i = i, j = j, mij = mij);
+                print (mij * scale * ci.dot(cj.T)).min();
+
+                q += (mij * scale * ci.dot(cj.T));
+                print q;
+                print 'min(q) = {0}'.format(q.min());
                 #print '{0} {1} {2}'.format(i, j, mij);
         print q;
     return;
