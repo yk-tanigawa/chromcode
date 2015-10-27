@@ -11,9 +11,10 @@ def allkmers(k):
 def kmercount(k, pos, chr = 21,
               fname_head = '../../data/GRCh38.p2.ch21/GRCh38.p2'):
     try:
-        fname = '{head}.ch{chr}.{pos}.jf'.format(head = fname_head,
-                                                 chr = chr,
-                                                 pos = pos);
+        fname = '{head}.ch{chr}.{pos}.{k}.jf'.format(head = fname_head,
+                                                     chr = chr,
+                                                     pos = pos, 
+                                                     k = k);
         qf = jellyfish.QueryMerFile(fname);
     except RuntimeError:
         raise;
@@ -32,7 +33,31 @@ def kmercount(k, pos, chr = 21,
         # print c.dot(c.T);
         return c;
 
+def compute_q(k, pos_set, hic_file):
+    with open(hic_file, 'r') as f:
+        q = np.zeros(((1 << (2 * k)), (1 << (2 * k))), dtype = np.int64);
+        for l in f:
+            (si, sj, smij) = l[:-1].split();
+            [i, j, mij] = [int(si), int(sj), float(smij)];
+            if((i in pos_set) and (j in pos_set)):
+                ci = kmercount(k, i);
+                cj = kmercount(k, j);
+                q + ci.dot(cj.T);
+                #print '{0} {1} {2}'.format(i, j, mij);
+        print q;
+    return;
+
 def main(argv):
+    datadir='../../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
+    chr = 'chr21';
+    res = '1kb';
+    norm_str = 'KR';
+    exp_str = 'KR';
+    hic_file = ''.join([datadir, '/', chr, '_', res, '.', norm_str, '.', exp_str, '.dat']);
+    pos_set = set(list(np.load('../pos.npz')['pos']));
+
+    compute_q(5, pos_set, hic_file);
+
     kmercount(5, 5010000);
     return;
 
