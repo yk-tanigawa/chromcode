@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 import sys, os;
 import numpy as np;
+from math import isnan;
 
 class Hic():
     def __init__(self, dirname, chr, res):
@@ -111,13 +112,27 @@ class Hic():
                     [i, j, mij] = [int(si), int(sj), float(smij)];
                     if(((min == None) or (min <= abs(i - j))) and
                        ((max == None) or (abs(i - j) <= max))):
+                        if(isnan(mij)):
+                            print 'before norm, exp .. mij is nan';
+                            print l[:-1];                    
                         if (norm != None):
                             mij /= (norm_v[i / self.resnum] * norm_v[j / self.resnum]);
                         if (exp != None):
                             mij /= exp_v[abs(i - j) / self.resnum];
-                        out.write('{0} {1} {2}\n'.format(i, j, mij));
-                        ijset.add(i);
-                        ijset.add(j);
+                        if(isnan(mij)):
+                            print 'after norm, exp, mij is nan';
+                            print l[:-1];
+                            if (norm != None):
+                                print 'norm';
+                                print (norm_v[i / self.resnum]);
+                                print (norm_v[j / self.resnum]);
+                            if (exp != None):
+                                print 'exp';
+                                print exp_v[abs(i - j) / self.resnum];
+                        else:
+                            out.write('{0} {1} {2}\n'.format(i, j, mij));
+                            ijset.add(i);
+                            ijset.add(j);
                         #print '{0} {1} {2}'.format(i, j, mij);
         positions = np.array(list(ijset));
         np.savez(posfile, hic = positions);
