@@ -22,12 +22,18 @@ def draw_heatmap(data, row_labels, column_labels):
     return heatmap;
 
 def main(argv):
-    a = np.ones((5, 5), dtype = np.float64);
-    for i in xrange(5):
-        for j in xrange(5):
-            a[i][j] = i * 5 + j;
-    print a;
-    draw_heatmap(a, range(5), range(5));
+    k = 5;
+    a = np.ones((1 << (2 * k), 1 << (2 * k)), dtype = np.float64);
+    for i in xrange(1 << (2 * k)):
+        for j in xrange(1 << (2 * k)):
+            a[i][j] = i * (1 << (2 * k)) + j;
+    #print a;
+    lab = [''] * (1 << (2 * k));
+    labnum = 8;
+    for i in xrange(labnum):
+        lab[i * (1 << (2 * k)) / labnum] = i * (1 << (2 * k)) / labnum;
+    lab[-1] = (1 << (2 * k)) - 1;
+    draw_heatmap(a, lab, lab);
     return;
 
 if __name__ == "__main__":
