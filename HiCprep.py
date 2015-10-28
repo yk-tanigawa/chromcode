@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 import sys, os;
+sys.path.append('/bio/lib/python2.7/site-packages');
+sys.path.append('/bio/lib/site-python');
 import numpy as np;
 from math import isnan;
 
