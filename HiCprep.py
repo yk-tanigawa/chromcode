@@ -142,11 +142,22 @@ def dirname(datadir = '/data/yt', res = '1kb', chr = 'chr21'):
                     '/MAPQGE30']);
     
 def main(argv):    
-    datadir='../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
-    #datadir=dirname(chr = 'chr21');
-    chr = 'chr21';
-    res = '1kb';
-    hic_prep(datadir, chr, res);
+    try:
+        datadir = argv[1];
+        chr = argv[2];
+        res = argv[3];
+    except IndexError:
+        print 'Usage: {prog_name} <Hi C data dir> <chr> <res>'.format(prog_name = argv[0]);
+
+        datadir='../data/GM12878_conbined_1kb_intra_chr21_MAPQGE30';
+        chr = 'chr21';
+        res = '1kb';
+        print 'example: {prog_name} {datadir} {chr} {res}'.format(prog_name = argv[0],
+                                                                  datadir = datadir,
+                                                                  chr = chr,
+                                                                  res = res);
+    else:
+        hic_prep(datadir, chr, res);
     return;
 
 if __name__ == "__main__":
