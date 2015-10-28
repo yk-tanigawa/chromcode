@@ -60,7 +60,7 @@ def compute_q(k, binsize, pos_set, hic_file, outfile):
                 q += (mij * scale * ci.dot(cj.T));
 
                 print q;
-                print '{space}# of data points: {i}, # of proceeded lines: {l}',format(space = (' ' * 20),
+                print '{space}# of data points: {i}, # of proceeded lines: {l}'.format(space = (' ' * 20),
                                                                                        i = datapoints,
                                                                                        l = linenum);
                 #print 'min(q) = {0}'.format(q.min());
