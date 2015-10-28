@@ -1,11 +1,10 @@
 #! /usr/bin/env python
 import sys, os;
+sys.path.append('/bio/lib/python2.7/site-packages');
+sys.path.append('/bio/lib/site-python');
 import numpy as np;
 
-def pos(hicfile = 'hic.pos.npz', 
-        genomefile = 'genome.pos.npz',
-        outfile = 'pos.npz', 
-        output = False):
+def pos(genomefile, hicfile, outfile, output = False):        
     try:
         savedhic = np.load(hicfile);
         savedgen = np.load(genomefile);
@@ -27,8 +26,24 @@ def pos(hicfile = 'hic.pos.npz',
             print 'There are {0} common positions'.format(len(pos));
                  
 def main(argv):
-    pos(output = True);
-    return;
+    try:
+        genomefile = argv[1];
+        hicfile = argv[2];
+        outfile = argv[3];                          
+    except IndexError:
+        print 'usage: {p} <genome pos> <hic pos> <out pos>'.format(p = argv[0]);
+
+        hicfile = 'hic.pos.npz';
+        genomefile = 'genome.pos.npz';
+        outfile = 'pos.npz';
+        print 'example: {p} {g} {h} {o}'.format(p = argv[0],
+                                                g = genomefile,
+                                                h = hicfile,
+                                                o = outfile);
+        exit(1);
+    else:
+        pos(genomefile, hicfile, outfile, output = True);
+        return;
 
 if __name__ == "__main__":
     main(sys.argv);
