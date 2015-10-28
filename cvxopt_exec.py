@@ -4,7 +4,8 @@ import numpy as np;
 from cvxopt import matrix;
 from cvxopt import solvers;
 
-def cvxopt_run(infile = 'cvxopt_params.npz', outfile = 'cvxopt.npz'):
+#def cvxopt_run(infile = 'cvxopt_params.npz', outfile = 'cvxopt.npz'):
+def cvxopt_run(infile, outfile):
     try:
         params = np.load(infile);
         P = matrix(params['P']);
@@ -37,8 +38,20 @@ def cvxopt_run(infile = 'cvxopt_params.npz', outfile = 'cvxopt.npz'):
             np.savez(outfile, x = x);
 
 def main(argv):
-    cvxopt_run();
-    return;
+    try:
+        infile = argv[1];
+        outfile = argv[2];
+    except IndexError:
+        print 'usage: {pname} <input file> <output file>'.format(pname = argv[0]);
+
+        infile = 'cvxopt_params.npz';
+        outfile = 'cvxopt.npz';
+        print 'example: {pname} {inf} {outf}'.format(pname = argv[0],
+                                                   inf = infile,
+                                                   outf = outfile);
+    else:
+        cvxopt_run(infile, outfile);
+        return;
 
 if __name__ == "__main__":
     main(sys.argv);

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
-
 import os, sys;
+sys.path.append('/bio/lib/python2.7/site-packages');
+sys.path.append('/bio/lib/site-python');
 import numpy as np;
 
 def get_ref(fp):
